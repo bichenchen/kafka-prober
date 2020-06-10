@@ -6,11 +6,11 @@
 ### 生产者模式
 
 ```
-./kafka-prober -brokers "10.21.180.31:6666,10.21.180.19:6666,10.21.180.18:6666" -topic "kafka-prober-topic1" -mode produce -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.lo
+./kafka-prober -brokers "" -topic "kafka-prober-topic1" -mode produce -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.lo
 ```
 ### 消费者模式
 ```
-./kafka-prober -brokers "10.21.180.31:6666,10.21.180.19:6666,10.21.180.18:6666" -topic "kafka-prober-topic1" -mode consume -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.log
+./kafka-prober -brokers "" -topic "kafka-prober-topic1" -mode consume -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.log
 ```
 ## topic 操作命令示例
 无需授权topic
@@ -18,16 +18,16 @@
 # 生成创建broker的指令
 cat kafka-cluster.txt|while read line;do zoo_con=$(echo $line|sed 's/9092/2181/');echo "/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper ${zoo_con} --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3";done
 1. 创建topic
-/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper 10.21.190.168:2181,10.21.190.164:2181,10.21.190.161:2181/bdstream_online4 --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3
 2. 删除topic
-/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper 10.21.190.168:2181,10.21.190.164:2181,10.21.190.161:2181/bdstream_online4 --delete --topic kafka-prober-topic1
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --delete --topic kafka-prober-topic1
 Topic kafka-prober-topic1 is marked for deletion.
 Note: This will have no impact if delete.topic.enable is not set to true.
 
 ```
 
 ## 部署
-1. 部署路径：10.21.176.95:/home/work/kafka_prober
+1. 部署路径：127.0.0.1:/tmp/kafka_prober
 2. 批量启动kafka-cluster.txt下所有的生产者和消费这
 默认走sasl协议，licai的集群未开启鉴权，所以需要单独启动
 
@@ -38,6 +38,6 @@ sh opt_kafka_prober.sh -m comsume -o start
 sh opt_kafka_prober.sh -m produce -o check
 sh opt_kafka_prober.sh -m consume -o check
 # 启动未开启鉴权的集群的探活服务
-sh opt_kafka_prober.sh -m produce -c licai_online_dd -f /home/work/kafka_prober/kafka-prober-noauth.yaml -o start
-sh opt_kafka_prober.sh -m produce -c licai_online_bl -f /home/work/kafka_prober/kafka-prober-noauth.yaml -o start
+sh opt_kafka_prober.sh -m produce -c licai_online_dd -f /tmp/kafka-prober-noauth.yaml -o start
+sh opt_kafka_prober.sh -m produce -c licai_online_bl -f /tmp/kafka-prober-noauth.yaml -o start
 ```
