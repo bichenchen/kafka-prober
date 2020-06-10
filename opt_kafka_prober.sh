@@ -1,7 +1,5 @@
 #!/bin/bash
-# 生成创建broker的指令：cat kafka-cluster.txt|while read line;do zoo_con=$(echo $line|sed 's/9092/2181/');echo "/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper ${zoo_con} --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3";done
-topic="kafka-prober-topic1"
-#topic="kafka-prober-topic3"
+topic="prober-topic1"
 username="test"
 passwd="test"
 interval=30
@@ -89,10 +87,10 @@ else
   clusters=${cluster}
 fi
 if [ "${conf}X" == "X" ];then
-  conf="/home/work/kafka_prober/kafka-prober.yaml"
+  conf="/tmp/kafka-prober.yaml"
 fi
 for cluster in ${clusters};do
-    log="/home/work/kafka_prober/logs/kafka-prober-${cluster}.log"
+    log="/tmp/logs/kafka-prober-${cluster}.log"
     brokers=`egrep "${cluster}$" kafka-cluster.txt|cut -d'/' -f1`
     if [ "${brokers}X" == "X" ];then
       echo "cluster name ${cluster} not exits"
