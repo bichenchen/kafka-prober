@@ -1,0 +1,15 @@
+metadataFull: true
+clientID:  "sasl_scram_client"
+netSaslEnable: true
+netSaslHandshake: true
+
+producerReturnSuccesses: true
+producerRetryMax: 3
+
+groupPartitionStrategy: "range"
+groupOffsetsRetryMax: 3
+groupSessionTimeout: 30
+groupHeartbeatInterval: 3
+consumerReturnErrors: true
+groupReturnNotifications: true
+

@@ -1,0 +1,43 @@
+# kafka topic 探活组件
+## 工作机制简述
+- 生产者：起3个实例，每个实例每隔10s生产一次消息，如果生产消息异常则推送异常消息到如流群【kafka风险通知】
+- 消费者：起3个实例，每隔2分钟commit一次，如果检测到rebalance或者消费异常则推送异常消息到如流群【kafka风险通知】
+## 使用方法
+### 生产者模式
+
+```
+./kafka-prober -brokers "10.21.180.31:6666,10.21.180.19:6666,10.21.180.18:6666" -topic "kafka-prober-topic1" -mode produce -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.lo
+```
+### 消费者模式
+```
+./kafka-prober -brokers "10.21.180.31:6666,10.21.180.19:6666,10.21.180.18:6666" -topic "kafka-prober-topic1" -mode consume -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.log
+```
+## topic 操作命令示例
+无需授权topic
+```
+# 生成创建broker的指令
+cat kafka-cluster.txt|while read line;do zoo_con=$(echo $line|sed 's/9092/2181/');echo "/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper ${zoo_con} --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3";done
+1. 创建topic
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper 10.21.190.168:2181,10.21.190.164:2181,10.21.190.161:2181/bdstream_online4 --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3
+2. 删除topic
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper 10.21.190.168:2181,10.21.190.164:2181,10.21.190.161:2181/bdstream_online4 --delete --topic kafka-prober-topic1
+Topic kafka-prober-topic1 is marked for deletion.
+Note: This will have no impact if delete.topic.enable is not set to true.
+
+```
+
+## 部署
+1. 部署路径：10.21.176.95:/home/work/kafka_prober
+2. 批量启动kafka-cluster.txt下所有的生产者和消费这
+默认走sasl协议，licai的集群未开启鉴权，所以需要单独启动
+
+```
+sh opt_kafka_prober.sh -m produce -o start
+sh opt_kafka_prober.sh -m comsume -o start
+# 检查
+sh opt_kafka_prober.sh -m produce -o check
+sh opt_kafka_prober.sh -m consume -o check
+# 启动未开启鉴权的集群的探活服务
+sh opt_kafka_prober.sh -m produce -c licai_online_dd -f /home/work/kafka_prober/kafka-prober-noauth.yaml -o start
+sh opt_kafka_prober.sh -m produce -c licai_online_bl -f /home/work/kafka_prober/kafka-prober-noauth.yaml -o start
+```
