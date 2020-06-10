@@ -2,26 +2,16 @@
 ## 工作机制简述
 - 生产者：起3个实例，每个实例每隔10s生产一次消息，如果生产消息异常则推送异常消息到如流群【kafka风险通知】
 - 消费者：起3个实例，每隔2分钟commit一次，如果检测到rebalance或者消费异常则推送异常消息到如流群【kafka风险通知】
-## 使用方法
-### 生产者模式
-
-```
-./kafka-prober -brokers "" -topic "kafka-prober-topic1" -mode produce -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.lo
-```
-### 消费者模式
-```
-./kafka-prober -brokers "" -topic "kafka-prober-topic1" -mode consume -username="normal-test" -passwd normal-secret-test -cluster public-test -n /home/work/kafka-prober-public-test.log
-```
+# 使用方法
 ## topic 操作命令示例
 无需授权topic
 ```
-# 生成创建broker的指令
-cat kafka-cluster.txt|while read line;do zoo_con=$(echo $line|sed 's/9092/2181/');echo "/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper ${zoo_con} --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3";done
+
 1. 创建topic
-/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --create --topic kafka-prober-topic1 --partitions 3 --replication-factor 3
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --create --topic prober-topic1 --partitions 3 --replication-factor 3
 2. 删除topic
-/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --delete --topic kafka-prober-topic1
-Topic kafka-prober-topic1 is marked for deletion.
+/home/work/local/kafka_online/bin/kafka-topics.sh --zookeeper '' --delete --topic prober-topic1
+Topic prober-topic1 is marked for deletion.
 Note: This will have no impact if delete.topic.enable is not set to true.
 
 ```
